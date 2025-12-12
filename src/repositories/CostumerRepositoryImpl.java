@@ -11,10 +11,13 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class CostumerRepositoryImpl extends AbstractCrudRepository {
+public class CostumerRepositoryImpl extends AbstractCrudRepository implements CostumerRepository{
 
-    protected CostumerRepositoryImpl(Connection connection) {
+    private PreparedStatement findByPhoneNumberStatement;
+
+    public CostumerRepositoryImpl(Connection connection) {
         super(connection);
     }
 
@@ -53,6 +56,39 @@ public class CostumerRepositoryImpl extends AbstractCrudRepository {
         } catch (SQLException e) {
             throw new RuntimeException();
         }
+    }
+
+    public Costumer findByPhoneNumber(String phoneNumber) {
+        try (PreparedStatement statement = getFindByPhoneNumberStatement()) {
+            statement.setString(1, phoneNumber);
+            try (ResultSet rs = statement.executeQuery()){
+                if (rs.next()) {
+                    Integer id = rs.getInt("id");
+                    String name = rs.getString(Costumer.NAME_COLUMN);
+                    String phonNumber = rs.getString(Costumer.PHONE_NUMBER_COLUMN);
+                    String address = rs.getString(Costumer.ADDRESS_COLUMN);
+
+                    Costumer costumer = new Costumer(name, phonNumber, address);
+                    costumer.setId(id);
+                    return costumer;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+        return null;
+    }
+
+    private PreparedStatement getFindByPhoneNumberStatement() {
+        if (Objects.isNull(findByPhoneNumberStatement)) {
+            try {
+                findByPhoneNumberStatement = connection.prepareStatement("SELECT * FROM costumers WHERE phone_number = ?");
+
+            } catch (SQLException e) {
+                throw new RuntimeException();
+            }
+        }
+        return findByPhoneNumberStatement;
     }
 
 

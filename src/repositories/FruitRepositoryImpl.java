@@ -13,9 +13,9 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FruitRepositoryImpl extends AbstractCrudRepository {
+public class FruitRepositoryImpl extends AbstractCrudRepository implements FruitRepository{
 
-    protected FruitRepositoryImpl(Connection connection) {
+    public FruitRepositoryImpl(Connection connection) {
         super(connection);
     }
 

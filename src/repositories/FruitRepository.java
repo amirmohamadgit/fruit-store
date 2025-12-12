@@ -1,4 +1,6 @@
 package repositories;
 
-public interface FruitRepository {
+import repositories.base.CrudRepository;
+
+public interface FruitRepository extends CrudRepository {
 }
