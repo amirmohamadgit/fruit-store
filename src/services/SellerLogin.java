@@ -1,9 +1,0 @@
-package services;
-
-import java.util.Objects;
-
-public class SellerLogin {
-    public static boolean login(String phoneNumber) {
-        return Objects.nonNull(BaseService.costumerRepository.findByPhoneNumber(phoneNumber));
-    }
-}

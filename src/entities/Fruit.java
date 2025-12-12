@@ -37,14 +37,6 @@ public class Fruit extends BaseEntity{
         return price;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public void setInventory(int inventory) {
         this.inventory = inventory;
     }

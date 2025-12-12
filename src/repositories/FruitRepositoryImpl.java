@@ -3,6 +3,7 @@ package repositories;
 import entities.BaseEntity;
 import entities.Costumer;
 import entities.Fruit;
+import entities.Seller;
 import repositories.base.AbstractCrudRepository;
 
 import java.sql.Connection;
@@ -30,6 +31,31 @@ public class FruitRepositoryImpl extends AbstractCrudRepository implements Fruit
         } catch (SQLException e) {
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public BaseEntity findById(Integer ID) {
+        try (PreparedStatement statement = getFindByIdStatement()){
+            statement.setInt(1, ID);
+
+            try (ResultSet rs = statement.executeQuery()){
+                if (rs.next()) {
+                    Integer id = rs.getInt("id");
+                    String name = rs.getString(Fruit.NAME_COLUMN);
+                    String description = rs.getNString(Fruit.DESCRIPTION_COLUMN);
+                    int inventory = rs.getInt(Fruit.INVENTORY_COLUMN);
+                    long price = rs.getLong(Fruit.PRICE_COLUMN);
+
+                    Fruit fruit = new Fruit(name, description, inventory, price);
+                    fruit.setId(id);
+
+                    return fruit;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+        return null;
     }
 
     @Override

@@ -1,9 +1,6 @@
 package util;
 
-import repositories.CostumerRepository;
-import repositories.CostumerRepositoryImpl;
-import repositories.FruitRepository;
-import repositories.FruitRepositoryImpl;
+import repositories.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,6 +13,7 @@ public class ApplicationContext {
     private Connection connection;
     private CostumerRepository costumerRepository;
     private FruitRepository fruitRepository;
+    private SellerRepositoryImpl sellerRepository;
 
     private ApplicationContext() {}
 
@@ -47,5 +45,10 @@ public class ApplicationContext {
     public FruitRepository getFruitRepository() {
         if (Objects.isNull(fruitRepository)) fruitRepository = new FruitRepositoryImpl(getConnection());
         return fruitRepository;
+    }
+
+    public SellerRepositoryImpl getSellerRepository() {
+        if (Objects.isNull(sellerRepository)) sellerRepository = new SellerRepositoryImpl(getConnection());
+        return sellerRepository;
     }
 }

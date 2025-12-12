@@ -15,6 +15,8 @@ public abstract class AbstractCrudRepository implements CrudRepository {
     protected PreparedStatement findAllStatement;
     protected PreparedStatement insertStatement;
     protected PreparedStatement updateStatement;
+    protected PreparedStatement findByIdStatement;
+    protected PreparedStatement deleteByIdStatement;
 
     protected AbstractCrudRepository(Connection connection) {
         this.connection = connection;
@@ -45,9 +47,7 @@ public abstract class AbstractCrudRepository implements CrudRepository {
     public abstract void update(BaseEntity baseEntity);
 
     @Override
-    public BaseEntity findById(Integer id) {
-        return null;
-    }
+    public abstract BaseEntity findById(Integer id);
 
     @Override
     public void deleteById(Integer id) {
@@ -75,6 +75,8 @@ public abstract class AbstractCrudRepository implements CrudRepository {
         }
         return insertStatement;
     }
+
+
 
     protected PreparedStatement getUpdateStatement() {
         if (Objects.isNull(updateStatement)) {
@@ -109,6 +111,30 @@ public abstract class AbstractCrudRepository implements CrudRepository {
             }
         }
         return findAllStatement;
+    }
+
+    protected PreparedStatement getFindByIdStatement(){
+        if (Objects.isNull(findByIdStatement)) {
+            try {
+                findByIdStatement = connection.prepareStatement("SELECT * FROM " + getTableName() + "WHERE id = ?");
+
+            } catch (SQLException e) {
+                throw new RuntimeException();
+            }
+        }
+        return findByIdStatement;
+    }
+
+    protected PreparedStatement getDeleteByIdStatement(){
+        if (Objects.isNull(deleteByIdStatement)) {
+            try {
+                deleteByIdStatement = connection.prepareStatement("DELETE FROM " + getTableName() + "WHERE id = ?");
+
+            } catch (SQLException e) {
+                throw new RuntimeException();
+            }
+        }
+        return deleteByIdStatement;
     }
 
     public abstract String[] getInsertColumns();
